@@ -1,4 +1,7 @@
 import urllib.request
+from collections import Counter
+import re
+
 url = "https://www.py4e.com/code3/mbox.txt"#guardo el url donde esta el .txt en una variable
 req = urllib.request.Request(
     url,
@@ -8,15 +11,25 @@ harvest = urllib.request.urlopen(req) #recoge la informacion que se obtiene de l
 data = harvest.read() #guarda los datos del .txt en lenguaje maquina
 mailinbox = data.decode("utf-8") #decodifica los datos a lenguaje de alto nivel con utf-8
 
+def counting_rep_words (text : str): # se ingresa un string
+    wpertext = re.findall(r"\b\w+\b", text.lower())  # se utiliza la funcion re.findall() para separar por un patrón regular las palabras, se 
+    #utiliza el metodo lower para pasar todo a minusculas y no preocuparse por sensibilidad a mayusculas.
+    count = Counter(wpertext) # cuenta la frecuencia de cada palabra
+    return count 
+
+
 if __name__=="__main__":
-    vows = "aeiouAEIOU" # se crea un strig con las vocales en mayusculas y minusculas
+    vows = "aeiouAEIOU" # se crea un string con las vocales en mayusculas y minusculas
     sonants = "bcdfghjklmnfpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ" # se crea un strig con las consonantes en mayusculas y minusculas
     count_vow : int = sum(mailinbox.count(vow) for vow in vows) # por medio de la función de sumatoria se hace un contador de la recurrencia de los caracteres en el string de vocales
     count_sonant : int = sum(mailinbox.count(sonant) for sonant in sonants) # por medio de la función de sumatoria se hace un contador de la recurrencia de los caracteres en el string de consonantes
     print(f"En total se presentan vocales {count_vow} cantidad de veces")
     print(f"En total se presentan consonantes {count_vow} cantidad de veces")
+    print(f"{print(counting_rep_words(mailinbox).most_common(50))}")
 
     # En caso que se desee se pregunta al usuario si desea ver el .txt
-    showinbox : str = input("¿Desea ver el texto de la bandeja de entrada del correo? \n¿Y/n?")
-    if showinbox == "y" or "Y":
+    showinbox : str = input("¿Desea ver el texto de la bandeja de entrada del correo? \n¿y/n?")
+    if showinbox == "y":
         print(mailinbox[:])
+    else:
+        print(None)
